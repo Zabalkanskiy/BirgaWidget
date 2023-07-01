@@ -24,7 +24,7 @@ class StockWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            deleteTitlePref(context, appWidgetId)
+            deleteTitlePref(context )
         }
     }
 
@@ -42,7 +42,7 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val widgetText = loadTitlePref(context, appWidgetId)
+    val widgetText = loadTitlePref(context)
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.stock_widget)
     views.setTextViewText(R.id.appwidget_text, widgetText)
