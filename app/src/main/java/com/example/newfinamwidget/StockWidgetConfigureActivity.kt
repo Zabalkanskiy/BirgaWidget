@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newfinamwidget.Recycler.RecyclerViewSecurite
 import com.example.newfinamwidget.databinding.StockWidgetConfigureBinding
 import com.example.newfinamwidget.helper.Securite
 import com.google.gson.Gson
@@ -65,8 +66,8 @@ class StockWidgetConfigureActivity : Activity() {
         appWidgetToken = binding.appwidgetToken
         appWidgetRecyclerView = binding.appwidgetRecyclerView
         appWidgetRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        //Нужно добавить адаптер
-
+        val recyclerView = RecyclerViewSecurite(persons)
+        appWidgetRecyclerView.adapter = recyclerView
         binding.addButton.setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
