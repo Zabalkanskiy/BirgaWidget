@@ -7,7 +7,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.newfinamwidget.databinding.StockWidgetConfigureBinding
+import com.example.newfinamwidget.helper.Securite
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.IOException
 
 /**
  * The configuration screen for the [StockWidget] AppWidget.
@@ -16,12 +22,15 @@ class StockWidgetConfigureActivity : Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var appWidgetText: EditText
     private lateinit var appWidgetToken: EditText
+    private lateinit var appWidgetRecyclerView: RecyclerView
     private var onClickListener = View.OnClickListener {
         val context = this@StockWidgetConfigureActivity
 
         // When the button is clicked, store the string locally
         val widgetText = appWidgetText.text.toString()
-        saveTitlePref(context, appWidgetId, widgetText)
+        saveTitlePref(context,  widgetText)
+        val tokenText = appWidgetToken.text.toString()
+        saveTokenPref(context, tokenText)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -38,14 +47,26 @@ class StockWidgetConfigureActivity : Activity() {
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
 
+        val jsonFileString = getJsonFromAsset(applicationContext, "stock.json")
+
+        val gson = Gson()
+
+        val listPersonType = object : TypeToken<List<Securite>>() {} .type
+        val persons: List<Securite> = gson.fromJson(jsonFileString, listPersonType)
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
+
         setResult(RESULT_CANCELED)
 
         binding = StockWidgetConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         appWidgetText = binding.appwidgetText as EditText
+        appWidgetToken = binding.appwidgetToken
+        appWidgetRecyclerView = binding.appwidgetRecyclerView
+        appWidgetRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        //Нужно добавить адаптер
+
         binding.addButton.setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
@@ -63,31 +84,69 @@ class StockWidgetConfigureActivity : Activity() {
             return
         }
 
-        appWidgetText.setText(loadTitlePref(this@StockWidgetConfigureActivity, appWidgetId))
+        appWidgetText.setText(loadTitlePref(this@StockWidgetConfigureActivity))
     }
 
 }
 
-private const val PREFS_NAME = "com.example.newfinamwidget.StockWidget"
-private const val PREF_PREFIX_KEY = "appwidget_"
+const val PREFS_NAME = "com.example.newfinamwidget.StockWidget"
+const val PREF_PREFIX_KEY = "appwidget_"
+const val TOKEN ="TOKEN"
+const val PAPER = "PAPER"
+
 
 // Write the prefix to the SharedPreferences object for this widget
-internal fun saveTitlePref(context: Context, appWidgetId: Int, text: String) {
+fun saveTitlePref(context: Context, text: String) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId, text)
+    prefs.putString(PREF_PREFIX_KEY, text)
     prefs.apply()
+}
+fun saveTokenPref(context: Context, text: String) {
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
+    prefs.putString(PREF_PREFIX_KEY + TOKEN, text)
+    prefs.apply()
+}
+
+fun saveListPaper(context: Context, text: String){
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val setString = prefs.getStringSet(PAPER, mutableSetOf())?.let { HashSet<String?>(it) }
+    setString?.add(text)
+    context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
+}
+
+fun loadListPaper(context: Context):Set<String>{
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val set = prefs.getStringSet("Paper", null)
+    return set ?: setOf("EXAMPLE")
 }
 
 // Read the prefix from the SharedPreferences object for this widget.
 // If there is no preference saved, get the default from a resource
-internal fun loadTitlePref(context: Context, appWidgetId: Int): String {
+fun loadTitlePref(context: Context): String {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    val titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null)
+    val titleValue = prefs.getString(PREF_PREFIX_KEY, null)
     return titleValue ?: context.getString(R.string.appwidget_text)
 }
 
-internal fun deleteTitlePref(context: Context, appWidgetId: Int) {
+fun loadTokenPref(context: Context): String{
+    val pref = context.getSharedPreferences(PREFS_NAME, 0)
+    val tokenValue = pref.getString(PREF_PREFIX_KEY + TOKEN, null)
+    return tokenValue ?: context.getString(R.string.appwidget_text)
+}
+
+internal fun deleteTitlePref(context: Context,) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
-    prefs.remove(PREF_PREFIX_KEY + appWidgetId)
+    prefs.remove(PREF_PREFIX_KEY)
     prefs.apply()
+}
+
+fun getJsonFromAsset(context: Context, fileName: String): String?{
+    val jsonString :String
+    try {
+        jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
+    } catch (ioException: IOException){
+        ioException.printStackTrace()
+        return null
+    }
+    return jsonString
 }
