@@ -2,6 +2,7 @@ package com.example.newfinamwidget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.widget.RemoteViews
 
@@ -30,6 +31,10 @@ class StockWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
+        //unical number job ID
+        //создаем jobScheduler для обновления виджета через каждую мнуту
+        val sJobId = 1
+       // val componentName = ComponentName(context,)
     }
 
     override fun onDisabled(context: Context) {
