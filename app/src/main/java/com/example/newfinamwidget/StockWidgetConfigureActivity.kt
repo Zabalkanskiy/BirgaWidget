@@ -114,6 +114,12 @@ fun saveListPaper(context: Context, text: String){
     setString?.add(text)
     context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
 }
+fun deletListPaper(context: Context, text: String){
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val setString = prefs.getStringSet(PAPER, mutableSetOf())?.let { HashSet<String?>(it) }
+    setString?.remove(text)
+    context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
+}
 
 fun loadListPaper(context: Context):Set<String>{
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)

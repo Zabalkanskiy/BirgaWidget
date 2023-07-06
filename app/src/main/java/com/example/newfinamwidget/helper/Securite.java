@@ -12,6 +12,8 @@ public class Securite {
     @SerializedName("SHORTNAME")
     @Expose
     private String shortname;
+    //add Boolean for checkbox
+    public Boolean checked = false;
 
     /**
      * No args constructor for use in serialization

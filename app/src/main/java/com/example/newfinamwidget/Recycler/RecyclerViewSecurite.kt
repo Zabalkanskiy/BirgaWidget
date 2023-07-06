@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newfinamwidget.FinamApplication
 import com.example.newfinamwidget.R
+import com.example.newfinamwidget.deletListPaper
 import com.example.newfinamwidget.helper.Securite
 import com.example.newfinamwidget.saveListPaper
 
@@ -15,17 +16,24 @@ class RecyclerViewSecurite(var securites: List<Securite>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: SecuriteViewHolder, position: Int) {
-       val paper =  securites[position]
+        val paper = securites[position]
         holder.tikerView.setText(paper.secid)
         holder.shortNameView.setText(paper.shortname)
         holder.chekcBox.setOnClickListener { view ->
             // saveListPaper(FinamAppApplications.getAppContext(), paper.secid)
             // holder.chekcBox.isChecked = !holder.chekcBox.isChecked
+             securites.get(position).checked = !securites.get(position).checked
             if (holder.chekcBox.isChecked) {
                 saveListPaper(FinamApplication.getAppContext(), paper.secid)
+                //   }
+            } else{
+                deletListPaper(FinamApplication.getAppContext(), paper.secid)
             }
+
         }
+        holder.chekcBox.isChecked = securites.get(position).checked
     }
+
 
     override fun getItemCount(): Int {
      return   securites.size
