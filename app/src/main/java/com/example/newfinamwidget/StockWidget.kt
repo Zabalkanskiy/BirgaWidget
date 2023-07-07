@@ -1,10 +1,14 @@
 package com.example.newfinamwidget
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.widget.RemoteViews
+import com.example.newfinamwidget.helper.WidgetJobService
+import java.util.concurrent.TimeUnit
 
 /**
  * Implementation of App Widget functionality.
@@ -34,7 +38,17 @@ class StockWidget : AppWidgetProvider() {
         //unical number job ID
         //создаем jobScheduler для обновления виджета через каждую мнуту
         val sJobId = 1
+        val componentName = ComponentName(context, WidgetJobService::class.java)
+        val jobInfo = JobInfo.Builder(sJobId, componentName)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            .setOverrideDeadline(TimeUnit.MINUTES.toMillis(1))
+            .setPersisted(true)
+            //если нужно можно добавить бандл .setExtras(extraInf)
+            .build()
        // val componentName = ComponentName(context,)
+        //создаем новый jobScheduler для того чтобы он обновил данные через минуту
+        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(jobInfo)
     }
 
     override fun onDisabled(context: Context) {
