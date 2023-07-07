@@ -28,19 +28,21 @@ class WidgetJobService: JobService() {
     override fun onStartJob(p0: JobParameters?): Boolean {
        val paper = loadListPaper(FinamApplication.getAppContext())
         val map = mutableMapOf<String, Double>()
-        for(name in paper){
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    //load from internet price paper
-                    val marketdata: MarketData = RetrofitApiService.stockService().getStock(name)
+        if (paper != null) {
+            for(name in paper){
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        //load from internet price paper
+                        val marketdata: MarketData = RetrofitApiService.stockService().getStock(name)
 
-                    withContext(Dispatchers.Main){
-                        //need save result
-                       map.put(name, marketdata.marketdata.data.first().first())
-                        Log.d("PUT", "name: ${name}, price: ${ marketdata.marketdata.data.first().first()}")
+                        withContext(Dispatchers.Main){
+                            //need save result
+                            map.put(name, marketdata.marketdata.data.first().first())
+                            Log.d("PUT", "name: ${name}, price: ${ marketdata.marketdata.data.first().first()}")
+                        }
+                    } catch (e: Exception){
+                        Log.e("Error Service COROUTINE", e.message.toString())
                     }
-                } catch (e: Exception){
-                    Log.e("Error Service COROUTINE", e.message.toString())
                 }
             }
         }

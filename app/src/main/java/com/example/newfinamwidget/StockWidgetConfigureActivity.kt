@@ -121,24 +121,24 @@ fun deletListPaper(context: Context, text: String){
     context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
 }
 
-fun loadListPaper(context: Context):Set<String>{
+fun loadListPaper(context: Context):Set<String>?{
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     val set = prefs.getStringSet("Paper", null)
-    return set ?: setOf("EXAMPLE")
+    return set
 }
 
 // Read the prefix from the SharedPreferences object for this widget.
 // If there is no preference saved, get the default from a resource
-fun loadTitlePref(context: Context): String {
+fun loadTitlePref(context: Context): String? {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     val titleValue = prefs.getString(PREF_PREFIX_KEY, null)
-    return titleValue ?: context.getString(R.string.appwidget_text)
+    return titleValue
 }
 
-fun loadTokenPref(context: Context): String{
+fun loadTokenPref(context: Context): String?{
     val pref = context.getSharedPreferences(PREFS_NAME, 0)
     val tokenValue = pref.getString(PREF_PREFIX_KEY + TOKEN, null)
-    return tokenValue ?: context.getString(R.string.appwidget_text)
+    return tokenValue
 }
 
 internal fun deleteTitlePref(context: Context,) {
