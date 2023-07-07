@@ -37,6 +37,7 @@ class WidgetJobService: JobService() {
                     withContext(Dispatchers.Main){
                         //need save result
                        map.put(name, marketdata.marketdata.data.first().first())
+                        Log.d("PUT", "name: ${name}, price: ${ marketdata.marketdata.data.first().first()}")
                     }
                 } catch (e: Exception){
                     Log.e("Error Service COROUTINE", e.message.toString())
