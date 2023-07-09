@@ -9,6 +9,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.icu.util.TimeUnit
+import android.os.Build
 import android.util.Log
 import com.example.newfinamwidget.FinamApplication
 import com.example.newfinamwidget.Retrofit.RetrofitApiService
@@ -26,7 +27,9 @@ class WidgetJobService: JobService() {
         androidx.work.Configuration.Builder().setJobSchedulerJobIdRange(0, 1000).build()
     }
     override fun onStartJob(p0: JobParameters?): Boolean {
+        Log.d("ON startjob", "On start jop started")
        val paper = loadListPaper(FinamApplication.getAppContext())
+        Log.d("Paper", "paper: $paper")
         val map = mutableMapOf<String, Double>()
         if (paper != null) {
             for(name in paper){
@@ -50,12 +53,12 @@ class WidgetJobService: JobService() {
         //unical number job ID
         val sJobId = 1
         val componentName = ComponentName(applicationContext, WidgetJobService::class.java)
-        val jobInfo = JobInfo.Builder(sJobId,componentName)
-                //28 api level need
-           // .setRequiredNetwork(JobInfo.NETWORK_TYPE_ANY)
-            .setOverrideDeadline(java.util.concurrent.TimeUnit.MINUTES.toMillis(1))
-            .setPersisted(true)
-            .build()
+        val jobInfo =    JobInfo.Builder(sJobId,componentName)
+                    //28 api level need
+              //  .setRequiredNetwork(JobInfo.NETWORK_TYPE_ANY)
+                .setMinimumLatency(60000) //60 second
+                .setPersisted(true)
+                .build()
 
         //создаем новый jobScheduler для того чтобы он обновил данные через минуту
         val jobScheduler = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler

@@ -42,7 +42,8 @@ class StockWidget : AppWidgetProvider() {
         val componentName = ComponentName(context, WidgetJobService::class.java)
         val jobInfo = JobInfo.Builder(sJobId, componentName)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-            .setOverrideDeadline(TimeUnit.MINUTES.toMillis(1))
+           // .setOverrideDeadline(TimeUnit.MINUTES.toMillis(1))
+            .setMinimumLatency(60000)//60 second
             .setPersisted(true)
             //если нужно можно добавить бандл .setExtras(extraInf)
             .build()
