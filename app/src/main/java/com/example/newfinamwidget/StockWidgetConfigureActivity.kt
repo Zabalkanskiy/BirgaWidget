@@ -123,7 +123,7 @@ fun deletListPaper(context: Context, text: String){
 
 fun loadListPaper(context: Context):Set<String>?{
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
-    val set = prefs.getStringSet("Paper", null)
+    val set = prefs.getStringSet(PAPER, null)
     return set
 }
 
