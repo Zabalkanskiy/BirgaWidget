@@ -50,6 +50,9 @@
         <service android:name=".helper.WidgetJobService"
             android:label="Widget job"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name=".helper.RmViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
     </application>
 
 </manifest>
