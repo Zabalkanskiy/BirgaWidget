@@ -15,6 +15,7 @@ import com.example.newfinamwidget.helper.Securite
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
+import java.lang.reflect.Type
 
 /**
  * The configuration screen for the [StockWidget] AppWidget.
@@ -94,6 +95,7 @@ const val PREFS_NAME = "com.example.newfinamwidget.StockWidget"
 const val PREF_PREFIX_KEY = "appwidget_"
 const val TOKEN ="TOKEN"
 const val PAPER = "PAPER"
+const val MAPPRICE = "MAPPRICE"
 
 
 // Write the prefix to the SharedPreferences object for this widget
@@ -114,6 +116,7 @@ fun saveListPaper(context: Context, text: String){
     setString?.add(text)
     context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
 }
+
 fun deletListPaper(context: Context, text: String){
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     val setString = prefs.getStringSet(PAPER, mutableSetOf())?.let { HashSet<String?>(it) }
@@ -145,6 +148,24 @@ internal fun deleteTitlePref(context: Context,) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY)
     prefs.apply()
+}
+
+fun savePriceMap(context: Context, text: String){
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val mapString = prefs.edit().putString(MAPPRICE, text).apply()
+}
+
+fun loadPriceMap(context: Context): HashMap<String, Double>?{
+    val gson = Gson()
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val mapKey = mutableMapOf<String, Double>()
+    mapKey.put("No stock", "0".toDouble())
+    //val gson = Gson()
+    val hashMapString = gson.toJson(mapKey)
+    val map = prefs.getString(MAPPRICE, hashMapString)
+    val type: Type = object : TypeToken<HashMap<String, Double>>(){}.type
+    val hashMap: HashMap<String, Double> =  gson.fromJson(map, type)
+    return hashMap
 }
 
 fun getJsonFromAsset(context: Context, fileName: String): String?{
