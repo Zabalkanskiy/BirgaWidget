@@ -18,7 +18,9 @@ import com.example.newfinamwidget.savePriceMap
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 
@@ -34,21 +36,29 @@ class WidgetJobService: JobService() {
 
         if (paper != null) {
             for(name in paper){
-          val  job =     CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        //load from internet price paper
-                        val marketdata: MarketData = RetrofitApiService.stockService().getStock(name)
+                runBlocking {
+                    val job = CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            //load from internet price paper
+                            val marketdata: MarketData =
+                                RetrofitApiService.stockService().getStock(name)
 
-                        withContext(Dispatchers.Main){
-                            //need save result
-                            map.put(name, marketdata.marketdata.data.first().first())
-                            val gson = Gson()
-                            val hashMapString = gson.toJson(map)
-                            savePriceMap(FinamApplication.getAppContext(), hashMapString)
-                            Log.d("PUT", "name: ${name}, price: ${ marketdata.marketdata.data.first().first()}")
+                            withContext(Dispatchers.Main) {
+                                //need save result
+                                map.put(name, marketdata.marketdata.data.first().first())
+                                val gson = Gson()
+                                val hashMapString = gson.toJson(map)
+                                savePriceMap(FinamApplication.getAppContext(), hashMapString)
+                                Log.d(
+                                    "PUT",
+                                    "name: ${name}, price: ${
+                                        marketdata.marketdata.data.first().first()
+                                    }"
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Log.e("Error Service COROUTINE", e.message.toString())
                         }
-                    } catch (e: Exception){
-                        Log.e("Error Service COROUTINE", e.message.toString())
                     }
                 }
 
@@ -63,6 +73,7 @@ class WidgetJobService: JobService() {
         }
 
         //unical number job ID
+        //delay(20000)
         val sJobId = 1
         val componentName = ComponentName(applicationContext, WidgetJobService::class.java)
         val jobInfo =    JobInfo.Builder(sJobId,componentName)
