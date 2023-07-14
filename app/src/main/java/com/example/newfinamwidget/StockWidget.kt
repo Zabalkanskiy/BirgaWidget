@@ -8,6 +8,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import com.example.newfinamwidget.helper.RemoteViewService
+import com.example.newfinamwidget.helper.RemoteViewStockFactory
+import com.example.newfinamwidget.helper.RmViewService
 import com.example.newfinamwidget.helper.WidgetJobService
 import java.util.concurrent.TimeUnit
 
@@ -73,11 +76,14 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val widgetText = loadTitlePref(context)
-    // Construct the RemoteViews object
+
     val views = RemoteViews(context.packageName, R.layout.stock_widget)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
+    var adapter = Intent(context,RmViewService::class.java)
+    adapter.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+    views.setRemoteAdapter(R.id.position_list, adapter)
+   // views.setTextViewText(R.id.position_list, widgetText)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.position_list)
 }
