@@ -39,21 +39,7 @@ class StockWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        //unical number job ID
-        //создаем jobScheduler для обновления виджета через каждую мнуту
-        val sJobId = 1
-        val componentName = ComponentName(context, WidgetJobService::class.java)
-        val jobInfo = JobInfo.Builder(sJobId, componentName)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-           // .setOverrideDeadline(TimeUnit.MINUTES.toMillis(1))
-            .setMinimumLatency(60000)//60 second
-            .setPersisted(true)
-            //если нужно можно добавить бандл .setExtras(extraInf)
-            .build()
-       // val componentName = ComponentName(context,)
-        //создаем новый jobScheduler для того чтобы он обновил данные через минуту
-        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        jobScheduler.schedule(jobInfo)
+
     }
 
     override fun onDisabled(context: Context) {

@@ -1,7 +1,10 @@
 package com.example.newfinamwidget
 
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.newfinamwidget.Recycler.RecyclerViewSecurite
 import com.example.newfinamwidget.databinding.StockWidgetConfigureBinding
 import com.example.newfinamwidget.helper.Securite
+import com.example.newfinamwidget.helper.WidgetJobService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -29,10 +33,31 @@ class StockWidgetConfigureActivity : Activity() {
         val context = this@StockWidgetConfigureActivity
 
         // When the button is clicked, store the string locally
-        val widgetText = appWidgetText.text.toString()
-        saveTitlePref(context,  widgetText)
-        val tokenText = appWidgetToken.text.toString()
-        saveTokenPref(context, tokenText)
+        //save title not work now
+       // val widgetText = appWidgetText.text.toString()
+       // saveTitlePref(context,  widgetText)
+        //save Token now not work this is function create for finam site
+       // val tokenText = appWidgetToken.text.toString()
+     //   saveTokenPref(context, tokenText)
+
+
+        //load data from internet and setting Job Service
+        //unical number job ID
+        //создаем jobScheduler для обновления виджета через каждую мнуту
+        val sJobId = 1
+        val componentName = ComponentName(context, WidgetJobService::class.java)
+        val jobInfo = JobInfo.Builder(sJobId, componentName)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            // .setOverrideDeadline(TimeUnit.MINUTES.toMillis(1))
+            //create and start now
+           // .setMinimumLatency(60000)//60 second
+            .setPersisted(true)
+            //если нужно можно добавить бандл .setExtras(extraInf)
+            .build()
+        // val componentName = ComponentName(context,)
+        //создаем новый jobScheduler для того чтобы он обновил данные через минуту
+        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(jobInfo)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
