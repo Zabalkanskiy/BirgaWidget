@@ -8,19 +8,19 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.icu.util.TimeUnit
-import android.os.Build
 import android.util.Log
 import com.example.newfinamwidget.FinamApplication
 import com.example.newfinamwidget.Retrofit.RetrofitApiService
 import com.example.newfinamwidget.Retrofit.data.MarketData
 import com.example.newfinamwidget.StockWidget
 import com.example.newfinamwidget.loadListPaper
+import com.example.newfinamwidget.savePriceMap
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
+
 
 class WidgetJobService: JobService() {
     init {
@@ -31,9 +31,10 @@ class WidgetJobService: JobService() {
        val paper = loadListPaper(FinamApplication.getAppContext())
         Log.d("Paper", "paper: $paper")
         val map = mutableMapOf<String, Double>()
+
         if (paper != null) {
             for(name in paper){
-                CoroutineScope(Dispatchers.IO).launch {
+          val  job =     CoroutineScope(Dispatchers.IO).launch {
                     try {
                         //load from internet price paper
                         val marketdata: MarketData = RetrofitApiService.stockService().getStock(name)
@@ -41,13 +42,24 @@ class WidgetJobService: JobService() {
                         withContext(Dispatchers.Main){
                             //need save result
                             map.put(name, marketdata.marketdata.data.first().first())
+                            val gson = Gson()
+                            val hashMapString = gson.toJson(map)
+                            savePriceMap(FinamApplication.getAppContext(), hashMapString)
                             Log.d("PUT", "name: ${name}, price: ${ marketdata.marketdata.data.first().first()}")
                         }
                     } catch (e: Exception){
                         Log.e("Error Service COROUTINE", e.message.toString())
                     }
                 }
+
             }
+            //convert to string using gson
+            //convert to string using gson
+            //нужно перенести в withContext
+
+           // val gson = Gson()
+           // val hashMapString = gson.toJson(map)
+         //   savePriceMap(FinamApplication.getAppContext(), hashMapString)
         }
 
         //unical number job ID
