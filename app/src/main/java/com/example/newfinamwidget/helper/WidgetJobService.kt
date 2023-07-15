@@ -34,43 +34,10 @@ class WidgetJobService: JobService() {
         Log.d("Paper", "paper: $paper")
         val map = mutableMapOf<String, Double>()
 
-        if (paper != null) {
-            for(name in paper){
-                runBlocking {
-                    val job = CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            //load from internet price paper
-                            val marketdata: MarketData =
-                                RetrofitApiService.stockService().getStock(name)
+        //Internet call
+        RetrofitApiService.loadinginternetData(paper)
 
-                            withContext(Dispatchers.Main) {
-                                //need save result
-                                map.put(name, marketdata.marketdata.data.first().first())
-                                val gson = Gson()
-                                val hashMapString = gson.toJson(map)
-                                savePriceMap(FinamApplication.getAppContext(), hashMapString)
-                                Log.d(
-                                    "PUT",
-                                    "name: ${name}, price: ${
-                                        marketdata.marketdata.data.first().first()
-                                    }"
-                                )
-                            }
-                        } catch (e: Exception) {
-                            Log.e("Error Service COROUTINE", e.message.toString())
-                        }
-                    }
-                }
 
-            }
-            //convert to string using gson
-            //convert to string using gson
-            //нужно перенести в withContext
-
-           // val gson = Gson()
-           // val hashMapString = gson.toJson(map)
-         //   savePriceMap(FinamApplication.getAppContext(), hashMapString)
-        }
 
         //unical number job ID
         //delay(20000)
@@ -88,10 +55,12 @@ class WidgetJobService: JobService() {
         jobScheduler.schedule(jobInfo)
 
         //отправляем broadcast для обновления данных
-        val forceWidgetUpdate = Intent(applicationContext, StockWidget::class.java)
-        forceWidgetUpdate.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-        sendBroadcast(forceWidgetUpdate)
-        jobFinished(p0, false)
+
+
+       //     val forceWidgetUpdate = Intent(applicationContext, StockWidget::class.java)
+       //     forceWidgetUpdate.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+       //     sendBroadcast(forceWidgetUpdate)
+       //     jobFinished(p0, false)
 
         return true
     }
