@@ -1,6 +1,7 @@
 package com.example.newfinamwidget
 
 import android.app.Activity
+import android.app.SearchManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.appwidget.AppWidgetManager
@@ -8,14 +9,22 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newfinamwidget.Recycler.RecyclerViewSecurite
 import com.example.newfinamwidget.databinding.StockWidgetConfigureBinding
 import com.example.newfinamwidget.helper.Securite
 import com.example.newfinamwidget.helper.WidgetJobService
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -24,11 +33,16 @@ import java.lang.reflect.Type
 /**
  * The configuration screen for the [StockWidget] AppWidget.
  */
-class StockWidgetConfigureActivity : Activity() {
+class StockWidgetConfigureActivity : AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var appWidgetText: EditText
     private lateinit var appWidgetToken: EditText
     private lateinit var appWidgetRecyclerView: RecyclerView
+    lateinit var button: Button
+   // lateinit var toolbar: android.widget.Toolbar
+    lateinit var binding: StockWidgetConfigureBinding
+    //empty recyclerView
+     var  recyclerView =  RecyclerViewSecurite(listOf())
     private var onClickListener = View.OnClickListener {
         val context = this@StockWidgetConfigureActivity
 
@@ -69,8 +83,12 @@ class StockWidgetConfigureActivity : Activity() {
         setResult(RESULT_OK, resultValue)
         finish()
     }
-    private lateinit var binding: StockWidgetConfigureBinding
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_search){
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
 
@@ -85,16 +103,23 @@ class StockWidgetConfigureActivity : Activity() {
 
         setResult(RESULT_CANCELED)
 
+
         binding = StockWidgetConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
+      //  toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        appWidgetText = binding.appwidgetText as EditText
+        appWidgetText = binding.appwidgetText
         appWidgetToken = binding.appwidgetToken
+
+
         appWidgetRecyclerView = binding.appwidgetRecyclerView
         appWidgetRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        val recyclerView = RecyclerViewSecurite(persons)
+        recyclerView = RecyclerViewSecurite(persons)
         appWidgetRecyclerView.adapter = recyclerView
-        binding.addButton.setOnClickListener(onClickListener)
+        button = binding.addButton
+        button.setOnClickListener(onClickListener)
+
 
         // Find the widget id from the intent.
         val intent = intent
@@ -114,7 +139,35 @@ class StockWidgetConfigureActivity : Activity() {
         appWidgetText.setText(loadTitlePref(this@StockWidgetConfigureActivity))
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val search: androidx.appcompat.widget.SearchView = menu?.findItem(R.id.action_search)?.actionView as androidx.appcompat.widget.SearchView
+        val searchView = menu.findItem(R.id.action_search).actionView as androidx.appcompat.widget.SearchView?
+
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView?.maxWidth = Int.MAX_VALUE
+        searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+            //    recyclerView.getFilter().filter(p0)
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                recyclerView.filter.filter(p0)
+                return false
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+
 }
+
+
 
 const val PREFS_NAME = "com.example.newfinamwidget.StockWidget"
 const val PREF_PREFIX_KEY = "appwidget_"
@@ -169,7 +222,7 @@ fun loadTokenPref(context: Context): String?{
     return tokenValue
 }
 
-internal fun deleteTitlePref(context: Context,) {
+internal fun deleteTitlePref(context: Context) {
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.remove(PREF_PREFIX_KEY)
     prefs.apply()
