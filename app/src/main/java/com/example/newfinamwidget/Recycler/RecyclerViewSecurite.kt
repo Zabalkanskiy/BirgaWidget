@@ -65,7 +65,8 @@ init {
           //              resultList.add(it)
            //         }
                     for (sec in securites){
-                        if(sec.secid.lowercase().contains(charString) ){
+                        val shortname: String = sec.shortname ?: ""
+                        if((sec.secid.lowercase().contains(charString)) || shortname.lowercase().contains(charString, ignoreCase = true)){
 
                                                     resultList.add(sec)
                         }

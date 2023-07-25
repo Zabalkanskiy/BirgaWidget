@@ -147,6 +147,7 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
 
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView?.maxWidth = Int.MAX_VALUE
+        //searchView?.imeOptions = ("en", "ru")
         searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
             //    recyclerView.getFilter().filter(p0)
