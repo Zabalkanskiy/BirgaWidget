@@ -34,10 +34,9 @@
                 android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                   android:labelFor="@id/appwidget_text"
                      android:text="@string/configure" />
 
-            <EditText
+           <!-- <EditText
                 android:id="@+id/appwidget_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,6 +53,15 @@
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:textIsSelectable="true" />
+                -->
+
+            <EditText
+                android:id="@+id/appwidget_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="seconds for update widget(min 90)"
+                />
 
               <Button
         android:id="@+id/add_button"

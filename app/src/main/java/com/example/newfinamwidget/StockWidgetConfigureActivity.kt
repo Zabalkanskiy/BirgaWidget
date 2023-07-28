@@ -35,8 +35,9 @@ import java.lang.reflect.Type
  */
 class StockWidgetConfigureActivity : AppCompatActivity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var appWidgetText: EditText
-    private lateinit var appWidgetToken: EditText
+  //  private lateinit var appWidgetText: EditText
+  //  private lateinit var appWidgetToken: EditText
+    lateinit var appSecondUpdate: EditText
     private lateinit var appWidgetRecyclerView: RecyclerView
     lateinit var button: Button
    // lateinit var toolbar: android.widget.Toolbar
@@ -73,6 +74,7 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         jobScheduler.schedule(jobInfo)
 
+        seveSecondUpdater(context = applicationContext, appSecondUpdate.text.toString().toLong())
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
         updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -109,8 +111,9 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
       //  toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(binding.toolbar)
 
-        appWidgetText = binding.appwidgetText
-        appWidgetToken = binding.appwidgetToken
+      //  appWidgetText = binding.appwidgetText
+       // appWidgetToken = binding.appwidgetToken
+        appSecondUpdate = binding.appwidgetNumber
 
 
         appWidgetRecyclerView = binding.appwidgetRecyclerView
@@ -119,6 +122,7 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         appWidgetRecyclerView.adapter = recyclerView
         button = binding.addButton
         button.setOnClickListener(onClickListener)
+
 
 
         // Find the widget id from the intent.
@@ -136,7 +140,7 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
             return
         }
 
-        appWidgetText.setText(loadTitlePref(this@StockWidgetConfigureActivity))
+     //   appWidgetText.setText(loadTitlePref(this@StockWidgetConfigureActivity))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -175,6 +179,7 @@ const val PREF_PREFIX_KEY = "appwidget_"
 const val TOKEN ="TOKEN"
 const val PAPER = "PAPER"
 const val MAPPRICE = "MAPPRICE"
+const val SECOND = "SECOND"
 
 
 // Write the prefix to the SharedPreferences object for this widget
@@ -256,4 +261,18 @@ fun getJsonFromAsset(context: Context, fileName: String): String?{
         return null
     }
     return jsonString
+}
+
+fun seveSecondUpdater(context: Context,  long: Long){
+    var sec: Long = 90
+    if (long <90){ sec = 90} else { sec = long}
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
+    prefs.putLong(SECOND, sec)
+    prefs.apply()
+}
+
+fun loadSecondUpdater(context: Context): Long{
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val secondValue = prefs.getLong(SECOND, 90)
+    return secondValue
 }

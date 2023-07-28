@@ -8,4 +8,6 @@
     <string name="action_seach">search</string>
     <string name="search_hint">hint</string>
     <string name="clientid">clientID</string>
+    <string name="tiker">Tiker</string>
+    <string name="short_name">Short name</string>
 </resources>

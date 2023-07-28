@@ -14,6 +14,7 @@ import com.example.newfinamwidget.Retrofit.RetrofitApiService
 import com.example.newfinamwidget.Retrofit.data.MarketData
 import com.example.newfinamwidget.StockWidget
 import com.example.newfinamwidget.loadListPaper
+import com.example.newfinamwidget.loadSecondUpdater
 import com.example.newfinamwidget.savePriceMap
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +34,8 @@ class WidgetJobService: JobService() {
        val paper = loadListPaper(FinamApplication.getAppContext())
         Log.d("Paper", "paper: $paper")
         val map = mutableMapOf<String, Double>()
+        //load seconds for update widget
+        val seconds = loadSecondUpdater(FinamApplication.getAppContext()) * 1000 // value in millisecons
 
         //Internet call
         RetrofitApiService.loadinginternetData(paper)
@@ -46,7 +49,7 @@ class WidgetJobService: JobService() {
         val jobInfo =    JobInfo.Builder(sJobId,componentName)
                     //28 api level need
               //  .setRequiredNetwork(JobInfo.NETWORK_TYPE_ANY)
-                .setMinimumLatency(60000) //60 second
+                .setMinimumLatency(seconds)
                 .setPersisted(true)
                 .build()
 
