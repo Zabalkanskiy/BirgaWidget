@@ -1,6 +1,6 @@
-package com.example.newfinamwidget.Retrofit
+package com.example.widgetbirga.Retrofit
 
-import com.example.newfinamwidget.Retrofit.data.MarketData
+import com.example.widgetbirga.Retrofit.data.MarketData
 import retrofit2.http.GET
 import retrofit2.http.Path
 

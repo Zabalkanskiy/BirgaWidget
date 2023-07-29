@@ -1,6 +1,5 @@
-package com.example.newfinamwidget
+package com.example.widgetbirga
 
-import android.app.Activity
 import android.app.SearchManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -14,17 +13,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.SearchView
-import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newfinamwidget.Recycler.RecyclerViewSecurite
-import com.example.newfinamwidget.databinding.StockWidgetConfigureBinding
-import com.example.newfinamwidget.helper.Securite
-import com.example.newfinamwidget.helper.WidgetJobService
-import com.google.android.material.appbar.MaterialToolbar
+import com.example.widgetbirga.Recycler.RecyclerViewSecurite
+import com.example.widgetbirga.databinding.StockWidgetConfigureBinding
+import com.example.widgetbirga.helper.Securite
+import com.example.widgetbirga.helper.WidgetJobService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -263,9 +258,9 @@ fun getJsonFromAsset(context: Context, fileName: String): String?{
     return jsonString
 }
 
-fun seveSecondUpdater(context: Context,  long: Long){
+fun seveSecondUpdater(context: Context,  long: Long?){
     var sec: Long = 90
-    if (long <90){ sec = 90} else { sec = long}
+    if (long == null || long<90){ sec = 90} else { sec = long}
     val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
     prefs.putLong(SECOND, sec)
     prefs.apply()

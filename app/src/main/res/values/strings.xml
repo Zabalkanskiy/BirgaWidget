@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Finam Widget</string>
+    <string name="app_name">Birga Widget</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
+    <string name="configure">Set seconds for update widget min 90</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="seach">search</string>
@@ -10,4 +10,6 @@
     <string name="clientid">clientID</string>
     <string name="tiker">Tiker</string>
     <string name="short_name">Short name</string>
+    <string name="_90">90</string>
+    <string name="clear_widgets">clear widgets</string>
 </resources>

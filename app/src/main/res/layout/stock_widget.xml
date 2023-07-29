@@ -2,7 +2,7 @@
     style="@style/Widget.FinamWidget.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.FinamWidget.AppWidgetContainer">
+    android:theme="@style/Theme.Widget.AppWidgetContainer">
 
     <ListView
         android:id="@+id/position_list"

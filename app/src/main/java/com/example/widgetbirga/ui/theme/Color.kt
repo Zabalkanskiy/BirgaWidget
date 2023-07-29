@@ -1,4 +1,4 @@
-package com.example.newfinamwidget.ui.theme
+package com.example.widgetbirga.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

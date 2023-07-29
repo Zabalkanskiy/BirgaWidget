@@ -7,18 +7,21 @@
 
     <TextView
         android:id="@+id/securite_tiker"
-        android:layout_width="70dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="Tiker" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/securite_short_name"
-        android:text="Short name"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingBottom="5dp"
+        android:text="Short name" />
 
     <CheckBox
         android:id="@+id/securite_check_box"
+        android:layout_weight="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

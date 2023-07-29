@@ -1,6 +1,5 @@
-package com.example.newfinamwidget.helper
+package com.example.widgetbirga.helper
 
-import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViewsService
 

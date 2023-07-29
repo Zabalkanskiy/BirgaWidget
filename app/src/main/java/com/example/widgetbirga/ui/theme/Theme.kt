@@ -1,4 +1,4 @@
-package com.example.newfinamwidget.ui.theme
+package com.example.widgetbirga.ui.theme
 
 import android.app.Activity
 import android.os.Build

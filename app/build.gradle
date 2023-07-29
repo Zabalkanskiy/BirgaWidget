@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.newfinamwidget'
+    namespace 'com.example.widgetbirga'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.newfinamwidget"
+        applicationId "com.example.widgetbirga"
         minSdk 26
         targetSdk 33
         versionCode 1

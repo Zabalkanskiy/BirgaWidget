@@ -1,4 +1,4 @@
-package com.example.newfinamwidget.helper;
+package com.example.widgetbirga.helper;
 
 
 import com.google.gson.annotations.Expose;

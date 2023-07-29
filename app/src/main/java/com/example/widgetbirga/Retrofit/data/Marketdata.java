@@ -1,4 +1,4 @@
-package com.example.newfinamwidget.Retrofit.data;
+package com.example.widgetbirga.Retrofit.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

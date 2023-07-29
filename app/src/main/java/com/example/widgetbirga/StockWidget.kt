@@ -1,18 +1,12 @@
-package com.example.newfinamwidget
+package com.example.widgetbirga
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import com.example.newfinamwidget.helper.RemoteViewService
-import com.example.newfinamwidget.helper.RemoteViewStockFactory
-import com.example.newfinamwidget.helper.RmViewService
-import com.example.newfinamwidget.helper.WidgetJobService
-import java.util.concurrent.TimeUnit
+import com.example.widgetbirga.helper.RmViewService
 
 /**
  * Implementation of App Widget functionality.

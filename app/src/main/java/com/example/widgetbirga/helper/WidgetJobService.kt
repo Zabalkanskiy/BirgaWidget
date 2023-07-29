@@ -1,28 +1,16 @@
-package com.example.newfinamwidget.helper
+package com.example.widgetbirga.helper
 
 import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
 import android.app.job.JobService
-import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.util.Log
-import com.example.newfinamwidget.FinamApplication
-import com.example.newfinamwidget.Retrofit.RetrofitApiService
-import com.example.newfinamwidget.Retrofit.data.MarketData
-import com.example.newfinamwidget.StockWidget
-import com.example.newfinamwidget.loadListPaper
-import com.example.newfinamwidget.loadSecondUpdater
-import com.example.newfinamwidget.savePriceMap
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import com.example.widgetbirga.WidgetApplication
+import com.example.widgetbirga.Retrofit.RetrofitApiService
+import com.example.widgetbirga.loadListPaper
+import com.example.widgetbirga.loadSecondUpdater
 
 
 class WidgetJobService: JobService() {
@@ -31,11 +19,11 @@ class WidgetJobService: JobService() {
     }
     override fun onStartJob(p0: JobParameters?): Boolean {
         Log.d("ON startjob", "On start jop started")
-       val paper = loadListPaper(FinamApplication.getAppContext())
+       val paper = loadListPaper(WidgetApplication.getAppContext())
         Log.d("Paper", "paper: $paper")
         val map = mutableMapOf<String, Double>()
         //load seconds for update widget
-        val seconds = loadSecondUpdater(FinamApplication.getAppContext()) * 1000 // value in millisecons
+        val seconds = loadSecondUpdater(WidgetApplication.getAppContext()) * 1000 // value in millisecons
 
         //Internet call
         RetrofitApiService.loadinginternetData(paper)

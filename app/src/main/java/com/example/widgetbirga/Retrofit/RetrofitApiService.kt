@@ -1,19 +1,18 @@
-package com.example.newfinamwidget.Retrofit
+package com.example.widgetbirga.Retrofit
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.util.Log
-import com.example.newfinamwidget.FinamApplication
-import com.example.newfinamwidget.Retrofit.data.MarketData
-import com.example.newfinamwidget.StockWidget
-import com.example.newfinamwidget.savePriceMap
+import com.example.widgetbirga.WidgetApplication
+import com.example.widgetbirga.Retrofit.data.MarketData
+import com.example.widgetbirga.StockWidget
+import com.example.widgetbirga.savePriceMap
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.lang.Exception
 
 private const val STOCK_URL = "https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/"
@@ -41,7 +40,7 @@ object RetrofitApiService {
                             map.put(paper, marketdata.marketdata.data.first().first())
                             val gson = Gson()
                             val hashMapString = gson.toJson(map)
-                            savePriceMap(FinamApplication.getAppContext(), hashMapString)
+                            savePriceMap(WidgetApplication.getAppContext(), hashMapString)
                             Log.d(
                                 "PUT",
                                 "name: ${paper}, price: ${
@@ -57,9 +56,9 @@ object RetrofitApiService {
                 }
                 job.join()
                 val forceWidgetUpdate =
-                    Intent(FinamApplication.getAppContext(), StockWidget::class.java)
+                    Intent(WidgetApplication.getAppContext(), StockWidget::class.java)
                 forceWidgetUpdate.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                FinamApplication.getAppContext().sendBroadcast(forceWidgetUpdate)
+                WidgetApplication.getAppContext().sendBroadcast(forceWidgetUpdate)
             }
 
         }

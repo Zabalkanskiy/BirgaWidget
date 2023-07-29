@@ -1,4 +1,4 @@
-package com.example.newfinamwidget
+package com.example.widgetbirga
 
 import org.junit.Test
 
