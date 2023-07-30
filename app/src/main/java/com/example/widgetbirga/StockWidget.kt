@@ -1,5 +1,6 @@
 package com.example.widgetbirga
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -61,7 +62,21 @@ internal fun updateAppWidget(
     var adapter = Intent(context,RmViewService::class.java)
     adapter.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
     views.setRemoteAdapter(R.id.position_list, adapter)
-   // views.setTextViewText(R.id.position_list, widgetText)
+
+    val intent = Intent(context, StockWidgetConfigureActivity::class.java)
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE)
+
+   intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,appWidgetId)
+   val pendingIntent = PendingIntent.getActivity(
+       context,
+        0,
+       intent,
+       PendingIntent.FLAG_IMMUTABLE
+    )
+    views.setPendingIntentTemplate(R.id.position_list, pendingIntent)
+
+
+
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)

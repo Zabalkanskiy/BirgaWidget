@@ -1,12 +1,15 @@
 package com.example.widgetbirga.helper
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import com.example.widgetbirga.MainActivity
 import com.example.widgetbirga.WidgetApplication
 import com.example.widgetbirga.R
 import com.example.widgetbirga.R.layout.item
+import com.example.widgetbirga.StockWidgetConfigureActivity
 import com.example.widgetbirga.loadPriceMap
 
 class RemoteViewStockFactory(val applicationContext: Context?, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
@@ -33,6 +36,11 @@ class RemoteViewStockFactory(val applicationContext: Context?, val intent: Inten
        val key  =priceMap?.keys?.elementAt(p0)
         rView.setTextViewText(R.id.list_name_stock, key)
         rView.setTextViewText(R.id.list_price_stock, priceMap?.get(key).toString())
+
+        val intent = Intent()
+        rView.setOnClickFillInIntent(R.id.list_name_stock, intent)
+        rView.setOnClickFillInIntent(R.id.list_price_stock,intent)
+
         return rView
     }
 
