@@ -1,5 +1,6 @@
 package com.example.widgetbirga
 
+import android.app.Person
 import android.app.SearchManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -35,8 +36,10 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
     lateinit var appSecondUpdate: EditText
     private lateinit var appWidgetRecyclerView: RecyclerView
     lateinit var button: Button
+    lateinit var clearButton: Button
    // lateinit var toolbar: android.widget.Toolbar
     lateinit var binding: StockWidgetConfigureBinding
+    lateinit var  persons: List<Securite>
     //empty recyclerView
      var  recyclerView =  RecyclerViewSecurite(listOf())
     private var onClickListener = View.OnClickListener {
@@ -80,6 +83,19 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         setResult(RESULT_OK, resultValue)
         finish()
     }
+    private val clearListener = View.OnClickListener {
+        clearPreferences(WidgetApplication.getAppContext())
+        val jsonFileString = getJsonFromAsset(applicationContext, "stock.json")
+
+        val gson = Gson()
+
+        val listPersonType = object : TypeToken<List<Securite>>() {} .type
+        persons = gson.fromJson(jsonFileString, listPersonType)
+        recyclerView.filterList = persons.toMutableList()
+
+        recyclerView.notifyDataSetChanged()
+
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.action_search){
             return true
@@ -94,7 +110,7 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         val gson = Gson()
 
         val listPersonType = object : TypeToken<List<Securite>>() {} .type
-        val persons: List<Securite> = gson.fromJson(jsonFileString, listPersonType)
+         persons = gson.fromJson(jsonFileString, listPersonType)
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
 
@@ -117,6 +133,9 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         appWidgetRecyclerView.adapter = recyclerView
         button = binding.addButton
         button.setOnClickListener(onClickListener)
+
+        clearButton = binding.clearButton
+        clearButton.setOnClickListener(clearListener)
 
 
 
@@ -270,4 +289,11 @@ fun loadSecondUpdater(context: Context): Long{
     val prefs = context.getSharedPreferences(PREFS_NAME, 0)
     val secondValue = prefs.getLong(SECOND, 90)
     return secondValue
+}
+
+fun clearPreferences(context: Context){
+    val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+    val setString = prefs.getStringSet(PAPER, mutableSetOf())?.let { HashSet<String?>(it) }
+    setString?.clear()
+    context.getSharedPreferences(PREFS_NAME, 0).edit().putStringSet(PAPER, setString).apply()
 }
