@@ -108,9 +108,19 @@ class StockWidgetConfigureActivity : AppCompatActivity() {
         val jsonFileString = getJsonFromAsset(applicationContext, "stock.json")
 
         val gson = Gson()
+       // applicationContext.startActivities(Intent(MainActivity::c))
 
         val listPersonType = object : TypeToken<List<Securite>>() {} .type
          persons = gson.fromJson(jsonFileString, listPersonType)
+         val loadPrice = loadPriceMap(WidgetApplication.getAppContext())
+        if(loadPrice !=null){
+          for (x in  persons){
+              if ( loadPrice.keys.contains( x.secid)){
+                 x.checked = true
+              }
+          }
+
+        }
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
 
